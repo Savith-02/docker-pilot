@@ -6,8 +6,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# Enable CORS
-CORS(app)
+# Enable CORS for all domains and routes
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Load TFLite model
 interpreter = tflite.Interpreter(model_path="./model/model.tflite")
