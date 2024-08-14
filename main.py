@@ -1,15 +1,13 @@
 import os
 import numpy as np
+import tflite_runtime.interpreter as tflite
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
-import tflite_runtime.interpreter as tflite
 
 app = Flask(__name__)
 
 # Enable CORS for all domains and routes
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Load TFLite model
 interpreter = tflite.Interpreter(model_path="./model/model.tflite")
@@ -19,8 +17,7 @@ input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
 
-@app.route('/predict', methods=['POST', 'OPTIONS'])
-@cross_origin()
+@app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json(force=True)
     # Add this line to debug the input data structure
