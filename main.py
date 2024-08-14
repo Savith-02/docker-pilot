@@ -20,14 +20,17 @@ output_details = interpreter.get_output_details()
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json(force=True)
+    # Add this line to debug the input data structure
+    print("Received data:", data)
     input_data = np.array(data['input'], dtype=np.float32)
+    print("Input data:", input_data)
 
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
     output_data = interpreter.get_tensor(output_details[0]['index'])
     output_data = np.round(output_data).astype(int)
     output_data = np.clip(output_data, None, 8)
-
+    print("Output data:", output_data)
     return jsonify({'prediction': output_data.tolist()})
 
 
